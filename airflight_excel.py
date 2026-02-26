@@ -85,10 +85,13 @@ def fmt_time(raw):
 
 
 # ── 엑셀 작성 ─────────────────────────────────────────
+DOMESTIC_AIRPORTS = {"김해", "제주"}
+
 COLUMNS = [
     ("운항일자", "_date"),
     ("출도착", "_flight_type"),
     ("편명", "flightId"),
+    ("I/D", "_intl_domestic"),
     ("STA/STD", "scheduleDatetime"),
     ("등록기호", "aircraftRegNo"),
     ("ATA/ATD", "estimatedDatetime"),
@@ -134,6 +137,9 @@ def write_sheet(wb, sheet_name, all_items):
                 value = flight_type
             elif field in ("scheduleDatetime", "estimatedDatetime"):
                 value = fmt_time(str(item.get(field, "") or ""))
+            elif field == "_intl_domestic":
+                airport = item.get("airport", "") or ""
+                value = "D" if airport in DOMESTIC_AIRPORTS else "I"
             elif field == "_dep_airport":
                 value = item.get("airport", "-") if flight_type == "A" else "-"
             elif field == "_arr_airport":

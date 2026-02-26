@@ -10,8 +10,11 @@ from airflight_excel import (
 import airflight_excel
 
 # st.secrets에 SERVICE_KEY가 있으면 덮어쓰기
-if "SERVICE_KEY" in st.secrets:
-    airflight_excel.SERVICE_KEY = st.secrets["SERVICE_KEY"]
+try:
+    if "SERVICE_KEY" in st.secrets:
+        airflight_excel.SERVICE_KEY = st.secrets["SERVICE_KEY"]
+except Exception:
+    pass
 
 st.set_page_config(
     page_title="인천공항 운항현황",
