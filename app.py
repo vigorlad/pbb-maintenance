@@ -134,7 +134,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown(
-    '<h1><a href="/" target="_self" style="text-decoration:none;color:inherit;">✈️ 인천공항 운항현황</a></h1>',
+    '<h2 style="font-size:1.4rem;"><a href="/" target="_self" style="text-decoration:none;color:inherit;">✈️ 인천공항 운항현황</a></h2>',
     unsafe_allow_html=True,
 )
 
