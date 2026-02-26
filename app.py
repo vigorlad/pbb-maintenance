@@ -185,14 +185,18 @@ with tab1:
                 arrivals = fetch_all_flights("getFltArrivalsDeOdp", search_date_str)
                 departures = fetch_all_flights("getFltDeparturesDeOdp", search_date_str)
 
-            # 해당 게이트 필터링 (출도착 구분 태그 추가)
+            # 해당 게이트 필터링 (출도착 구분 태그 추가, Master 편만)
             gate_flights = []
             for item in arrivals:
+                if item.get("codeshare") != "Master":
+                    continue
                 fstand = (item.get("fstandPosition") or "").strip().upper()
                 if fstand == gate_query:
                     item["_flight_type"] = "A"
                     gate_flights.append(item)
             for item in departures:
+                if item.get("codeshare") != "Master":
+                    continue
                 fstand = (item.get("fstandPosition") or "").strip().upper()
                 if fstand == gate_query:
                     item["_flight_type"] = "D"

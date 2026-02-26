@@ -125,6 +125,9 @@ def write_sheet(wb, sheet_name, all_items):
         cell.alignment = Alignment(horizontal="center", vertical="center")
         cell.border = THIN_BORDER
 
+    # codeshare Master 편만 필터링
+    all_items = [(item, ft) for item, ft in all_items if item.get("codeshare") == "Master"]
+
     # 예정일시 기준 정렬
     all_items.sort(key=lambda x: x[0].get("scheduleDatetime", "") or "")
 
