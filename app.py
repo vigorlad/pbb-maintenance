@@ -139,7 +139,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown(
-    '<h2 style="font-size:1.4rem;"><a href="/" target="_self" style="text-decoration:none;color:inherit;">✈️ 인천공항 운항현황</a></h2>',
+    '<h2 style="font-size:1.4rem;"><a href="/" target="_self" style="text-decoration:none;color:inherit;">✈️ 인천공항 운항현황 PBB_MT</a></h2>',
     unsafe_allow_html=True,
 )
 
@@ -378,9 +378,9 @@ with tab2:
         output.seek(0)
 
         if start_str == end_str:
-            filename = f"인천공항_운항현황_{start_str}.xlsx"
+            filename = f"인천공항 운항현황 PBB_MT ({start_str}).xlsx"
         else:
-            filename = f"인천공항_운항현황_{start_str}_{end_str}.xlsx"
+            filename = f"인천공항 운항현황 PBB_MT ({start_str}_{end_str}).xlsx"
 
         # 결과 요약
         total = sum(len(v) for v in terminal_items.values())
