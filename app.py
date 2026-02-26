@@ -25,10 +25,15 @@ st.set_page_config(
 # ── 모바일 친화적 CSS ─────────────────────────────────────
 st.markdown("""
 <style>
+    /* 상단 여백 확보 */
+    .block-container {
+        padding-top: 2rem !important;
+    }
+
     /* 모바일 반응형 */
     @media (max-width: 768px) {
         .block-container {
-            padding: 1rem 0.8rem !important;
+            padding: 2rem 0.8rem 1rem 0.8rem !important;
         }
         .stTabs [data-baseweb="tab-list"] {
             gap: 0;
