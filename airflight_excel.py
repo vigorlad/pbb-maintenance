@@ -240,9 +240,9 @@ def main():
 
     # 4) 파일 저장
     if start_date == end_date:
-        filename = f"인천공항_운항현황_{start_date}.xlsx"
+        filename = f"인천공항 운항현황 PBB_MT ({start_date}).xlsx"
     else:
-        filename = f"인천공항_운항현황_{start_date}_{end_date}.xlsx"
+        filename = f"인천공항 운항현황 PBB_MT ({start_date}_{end_date}).xlsx"
     wb.save(filename)
     print(f"\n엑셀 파일 저장 완료: {filename}")
     print(f"총 출발편: {len(departures)}건, 도착편: {len(arrivals)}건")

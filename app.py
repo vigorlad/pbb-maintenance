@@ -17,7 +17,7 @@ except Exception:
     pass
 
 st.set_page_config(
-    page_title="인천공항 운항현황",
+    page_title="인천공항 운항현황 PBB_MT",
     page_icon="✈️",
     layout="wide",
 )
