@@ -117,6 +117,11 @@ CSS = """
         font-size: 0.9rem;
         color: #555;
     }
+    .next-flight-row .nf-label {
+        font-size: 0.7rem;
+        color: #999;
+        margin-right: 2px;
+    }
 
     /* ── 탭 스타일 ── */
     .stTabs [data-baseweb="tab-list"] {

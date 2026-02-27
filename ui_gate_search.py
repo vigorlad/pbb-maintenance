@@ -85,7 +85,15 @@ def _render_flight_row(item: dict):
     <div class="next-flight-row" style="border-left-color: {_flight_type_color(flight_type)};">
         <span class="nf-time">{display_time}</span>
         &nbsp;&nbsp;
-        <span class="nf-info">{_flight_type_label(flight_type)} | {flight_number} | {airport_name} | {remark}</span>
+        <span class="nf-info">
+            <span class="nf-label">출도착</span> {_flight_type_label(flight_type)}
+            &nbsp;|&nbsp;
+            <span class="nf-label">편명</span> {flight_number}
+            &nbsp;|&nbsp;
+            <span class="nf-label">{_airport_label(flight_type)}</span> {airport_name}
+            &nbsp;|&nbsp;
+            <span class="nf-label">상태</span> {remark}
+        </span>
     </div>
     """, unsafe_allow_html=True)
 
