@@ -144,7 +144,7 @@ def render(tab, today, now, min_date, max_date):
         with gate_column:
             gate_input = st.text_input(
                 "게이트(주기장) 번호",
-                placeholder="예: 230, A10 ...",
+                placeholder="예: 43, 123 ...",
                 key="gate_input",
             )
 
