@@ -148,42 +148,45 @@ def render(tab, today, now, min_date, max_date):
                 key="gate_input",
             )
 
-        if st.button("🔍 조회", type="primary", key="gate_search"):
-            if not gate_input.strip():
-                st.warning("게이트 번호를 입력해주세요.")
+        gate_value = gate_input.strip()
+        is_valid_gate = bool(gate_value) and gate_value.isdigit()
+
+        if gate_value and not gate_value.isdigit():
+            st.warning("게이트 번호는 숫자만 입력 가능합니다.")
+
+        if st.button("🔍 조회", type="primary", key="gate_search", disabled=not is_valid_gate):
+            gate_query = gate_value
+            search_date_string = search_date.strftime("%Y%m%d")
+
+            with st.spinner("운항 데이터 조회 중..."):
+                arrivals = fetch_all_flights("getFltArrivalsDeOdp", search_date_string)
+                departures = fetch_all_flights("getFltDeparturesDeOdp", search_date_string)
+
+            gate_flights = (
+                _filter_by_gate(arrivals, gate_query, "A") +
+                _filter_by_gate(departures, gate_query, "D")
+            )
+
+            if not gate_flights:
+                st.error(f"게이트 **{gate_query}** 에 배정된 운항편이 없습니다.")
             else:
-                gate_query = gate_input.strip().upper()
-                search_date_string = search_date.strftime("%Y%m%d")
+                cutoff = datetime.combine(search_date, search_time).replace(tzinfo=KST)
+                future_flights = _filter_future_flights(gate_flights, cutoff)
 
-                with st.spinner("운항 데이터 조회 중..."):
-                    arrivals = fetch_all_flights("getFltArrivalsDeOdp", search_date_string)
-                    departures = fetch_all_flights("getFltDeparturesDeOdp", search_date_string)
-
-                gate_flights = (
-                    _filter_by_gate(arrivals, gate_query, "A") +
-                    _filter_by_gate(departures, gate_query, "D")
-                )
-
-                if not gate_flights:
-                    st.error(f"게이트 **{gate_query}** 에 배정된 운항편이 없습니다.")
+                if not future_flights:
+                    st.info(f"게이트 **{gate_query}** 에 기준 시간 이후 운항편이 없습니다.")
+                    st.markdown(f"**{search_date.strftime('%Y-%m-%d')} 해당 게이트 전체 현황:**")
+                    gate_flights.sort(key=lambda x: x.get("scheduled_datetime", "") or "")
+                    for item in gate_flights:
+                        _render_flight_row(item)
                 else:
-                    cutoff = datetime.combine(search_date, search_time).replace(tzinfo=KST)
-                    future_flights = _filter_future_flights(gate_flights, cutoff)
+                    future_flights.sort(key=lambda x: x["_parsed_time"])
+                    _render_main_card(future_flights[0], gate_query)
 
-                    if not future_flights:
-                        st.info(f"게이트 **{gate_query}** 에 기준 시간 이후 운항편이 없습니다.")
-                        st.markdown(f"**{search_date.strftime('%Y-%m-%d')} 해당 게이트 전체 현황:**")
-                        gate_flights.sort(key=lambda x: x.get("scheduled_datetime", "") or "")
-                        for item in gate_flights:
+                    if len(future_flights) > 1:
+                        st.markdown(f"**이후 운항 예정 ({len(future_flights) - 1}건)**")
+                        for item in future_flights[1:]:
                             _render_flight_row(item)
-                    else:
-                        future_flights.sort(key=lambda x: x["_parsed_time"])
-                        _render_main_card(future_flights[0], gate_query)
-
-                        if len(future_flights) > 1:
-                            st.markdown(f"**이후 운항 예정 ({len(future_flights) - 1}건)**")
-                            for item in future_flights[1:]:
-                                _render_flight_row(item)
 
         st.markdown(
             '<div class="gate-caption">게이트 번호 숫자로만 검색하세요</div>',
