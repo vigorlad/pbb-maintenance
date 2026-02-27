@@ -41,10 +41,16 @@ def render(tab, today, min_date, max_date):
 
             terminal_items = {terminal_id: [] for terminal_id in PASSENGER_TERMINALS}
             for item in departures:
+                scheduled = str(item.get("scheduled_datetime") or "")[:8]
+                if scheduled < start_date_string or scheduled > end_date_string:
+                    continue
                 terminal_id = item.get("terminal_id", "")
                 if terminal_id in PASSENGER_TERMINALS:
                     terminal_items[terminal_id].append((item, "D"))
             for item in arrivals:
+                scheduled = str(item.get("scheduled_datetime") or "")[:8]
+                if scheduled < start_date_string or scheduled > end_date_string:
+                    continue
                 terminal_id = item.get("terminal_id", "")
                 if terminal_id in PASSENGER_TERMINALS:
                     terminal_items[terminal_id].append((item, "A"))
