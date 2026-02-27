@@ -55,16 +55,14 @@ def _filter_by_gate(flights: list[dict], gate_query: str, flight_type: str) -> l
 def _filter_future_flights(gate_flights: list[dict], cutoff: datetime) -> list[dict]:
     future_flights = []
     for item in gate_flights:
-        actual_datetime = item.get("actual_datetime") or ""
         scheduled_datetime = item.get("scheduled_datetime") or ""
-        time_string = actual_datetime if actual_datetime and actual_datetime != "-" else scheduled_datetime
 
-        if not time_string or time_string == "-":
+        if not scheduled_datetime or scheduled_datetime == "-":
             continue
 
         try:
             parsed_flight_time = datetime.strptime(
-                str(time_string).strip(), "%Y%m%d%H%M"
+                str(scheduled_datetime).strip(), "%Y%m%d%H%M"
             ).replace(tzinfo=KST)
             item["_parsed_time"] = parsed_flight_time
 
