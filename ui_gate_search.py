@@ -149,13 +149,14 @@ def render(tab, today, now, min_date, max_date):
             )
 
         gate_value = gate_input.strip()
-        is_valid_gate = bool(gate_value) and gate_value.isdigit()
 
-        if gate_value and not gate_value.isdigit():
-            st.warning("게이트 번호는 숫자만 입력 가능합니다.")
-
-        if st.button("🔍 조회", type="primary", key="gate_search", disabled=not is_valid_gate):
-            gate_query = gate_value
+        if st.button("🔍 조회", type="primary", key="gate_search"):
+            if not gate_value:
+                st.warning("게이트 번호를 입력해주세요.")
+            elif not gate_value.isdigit():
+                st.warning("게이트 번호는 숫자만 입력 가능합니다.")
+            else:
+                gate_query = gate_value
             search_date_string = search_date.strftime("%Y%m%d")
 
             with st.spinner("운항 데이터 조회 중..."):
