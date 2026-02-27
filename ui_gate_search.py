@@ -186,6 +186,6 @@ def render(tab, today, now, min_date, max_date):
                                 _render_flight_row(item)
 
         st.markdown(
-            '<div class="gate-caption">주기장 번호는 공항 게이트 번호와 동일합니다</div>',
+            '<div class="gate-caption">게이트 번호 숫자로만 검색하세요</div>',
             unsafe_allow_html=True,
         )
