@@ -11,7 +11,7 @@ def render(tab, today, min_date, max_date):
 
         terminal_column, start_column, end_column = st.columns(3)
         with terminal_column:
-            target_terminal = st.selectbox("터미널", ("T1", "탑승동", "T2"))
+            target_terminal = st.selectbox("터미널", ("T1", "Con", "T2"))
         with start_column:
             start_date = st.date_input(
                 "시작일", value=today, min_value=min_date, max_value=max_date
