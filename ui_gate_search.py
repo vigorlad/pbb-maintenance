@@ -79,6 +79,7 @@ def _render_flight_row(item: dict):
     flight_number = item.get("flight_number", "-")
     airport_name = item.get("airport_name", "-") or "-"
     remark = item.get("remark", "-") or "-"
+    aircraft_type = item.get("aircraft_type", "-") or "-"
     flight_type = item.get("_flight_type", "A")
 
     st.markdown(f"""
@@ -93,6 +94,8 @@ def _render_flight_row(item: dict):
             <span class="nf-label">{_airport_label(flight_type)}</span> {airport_name}
             &nbsp;|&nbsp;
             <span class="nf-label">상태</span> {remark}
+            &nbsp;|&nbsp;
+            <span class="nf-label">기종</span> {aircraft_type}
         </span>
     </div>
     """, unsafe_allow_html=True)
