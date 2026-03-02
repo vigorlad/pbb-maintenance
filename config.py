@@ -8,7 +8,7 @@ NUM_OF_ROWS = 1000
 
 TARGET_TERMINAL_MAP = {
     "T1": "P01",
-    "탑승동": "P02",
+    "Con": "P02",
     "T2": "P03",
 }
 
@@ -22,7 +22,7 @@ PASSENGER_TERMINALS = set(TERMINAL_MAP.keys())
 
 SHEET_ORDER = [
     ("P01", "T1"),
-    ("P02", "탑승동"),
+    ("P02", "Con"),
     ("P03", "T2"),
 ]
 
