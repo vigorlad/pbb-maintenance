@@ -114,11 +114,13 @@ def render(tab, today, now, min_date, max_date):
                 st.warning("게이트 번호는 숫자만 입력 가능합니다.")
             else:
                 with st.spinner("운항 데이터 조회 중..."):
-                    gate_flights = fetch_gate_flights(
+                    gate_flights, elapsed = fetch_gate_flights(
                         search_date.strftime("%Y%m%d"),
                         gate_value,
                         search_time.strftime("%H%M"),
                     )
+
+                st.caption(f"조회 소요시간: {elapsed:.2f}초")
 
                 if not gate_flights:
                     st.error(f"게이트 **{gate_value}** 에 배정된 운항편이 없습니다.")

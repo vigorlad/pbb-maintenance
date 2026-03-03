@@ -30,7 +30,7 @@ def fetch_gate_flights(
     search_date: str,
     gate: str,
     search_from: str,
-) -> list[GateFlight]:
+) -> tuple[list[GateFlight], float]:
     start = time.time()
 
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -46,10 +46,11 @@ def fetch_gate_flights(
     elapsed = time.time() - start
     print(f"[게이트 조회] API 병렬 소요시간: {elapsed:.2f}초")
 
-    return (
+    result = (
         _filter_by_gate(arrivals, gate, FlightType.ARRIVAL)
         + _filter_by_gate(departures, gate, FlightType.DEPARTURE)
     )
+    return result, elapsed
 
 
 def filter_future_flights(
