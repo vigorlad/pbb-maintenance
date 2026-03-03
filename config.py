@@ -6,7 +6,7 @@ from models import Terminal
 
 SERVICE_KEY = os.environ.get("SERVICE_KEY", "")
 BASE_URL = "https://apis.data.go.kr/B551177/statusOfAllFltDeOdp"
-NUM_OF_ROWS = 1000
+NUM_OF_ROWS = 10000
 
 TERMINALS = [
     Terminal("T1", "P01"),

@@ -5,6 +5,8 @@ import requests
 import config
 from models import FlightItem, FlightType
 
+_session = requests.Session()
+
 _API_FIELD_MAP = {
     "flightId":          "flight_number",
     "scheduleDatetime":  "scheduled_datetime",
@@ -45,7 +47,7 @@ def _fetch_pages(operation: str, search_date: str, **extra_params) -> list[dict]
             **extra_params,
         }
 
-        response = requests.get(url, params=params, timeout=30)
+        response = _session.get(url, params=params, timeout=30)
         response.raise_for_status()
         data = response.json()
 
