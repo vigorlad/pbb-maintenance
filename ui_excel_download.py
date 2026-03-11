@@ -44,9 +44,9 @@ def render(tab, today, min_date, max_date):
                 status.update(label="조회 완료!", state="complete")
 
             if start_date_string == end_date_string:
-                filename = f"인천공항 운항현황 PBB_MT ({start_date_string}).xlsx"
+                filename = f"인천공항 운항현황 PBB_MT {target_terminal} ({start_date_string}).xlsx"
             else:
-                filename = f"인천공항 운항현황 PBB_MT ({start_date_string}_{end_date_string}).xlsx"
+                filename = f"인천공항 운항현황 PBB_MT {target_terminal} ({start_date_string}_{end_date_string}).xlsx"
 
             total = sum(len(v) for v in terminal_items.values())
             st.success(f"총 {total}건 조회 완료")
