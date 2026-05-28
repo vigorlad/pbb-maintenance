@@ -1,6 +1,7 @@
 import streamlit as st
 
 from config import TERMINALS
+from flight_api import FlightApiError
 from services import fetch_excel_data
 from utils import date_range
 from excel_export import create_excel_file, file_to_bytes_io
@@ -35,13 +36,17 @@ def render(tab, today, min_date, max_date):
             terminal_id_map = {t.name: t.terminal_id for t in TERMINALS}
             target_terminal_id = terminal_id_map[target_terminal]
 
-            with st.status(f"{len(dates)}일간 데이터 조회 중...", expanded=True) as status:
-                def on_progress(date_string, phase):
-                    label = "출발편" if phase == "departure" else "도착편"
-                    st.write(f"📅 {date_string} {label} 조회 중...")
+            try:
+                with st.status(f"{len(dates)}일간 데이터 조회 중...", expanded=True) as status:
+                    def on_progress(date_string, phase):
+                        label = "출발편" if phase == "departure" else "도착편"
+                        st.write(f"📅 {date_string} {label} 조회 중...")
 
-                terminal_items = fetch_excel_data(dates, target_terminal_id, progress_callback=on_progress)
-                status.update(label="조회 완료!", state="complete")
+                    terminal_items = fetch_excel_data(dates, target_terminal_id, progress_callback=on_progress)
+                    status.update(label="조회 완료!", state="complete")
+            except FlightApiError as exc:
+                st.warning(str(exc))
+                return
 
             if start_date_string == end_date_string:
                 filename = f"인천공항 운항현황 PBB_MT {target_terminal} ({start_date_string}).xlsx"

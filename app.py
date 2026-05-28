@@ -8,8 +8,12 @@ import ui_gate_search
 import ui_excel_download
 
 try:
-    if "SERVICE_KEY" in st.secrets:
-        config.SERVICE_KEY = st.secrets["SERVICE_KEY"]
+    for service_key_name in config.SERVICE_KEY_NAMES:
+        if service_key_name in st.secrets:
+            service_key = str(st.secrets[service_key_name]).strip()
+            if service_key:
+                config.SERVICE_KEY = service_key
+                break
 except Exception:
     pass
 
