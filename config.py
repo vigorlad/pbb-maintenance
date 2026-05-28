@@ -4,21 +4,9 @@ from datetime import timedelta, timezone
 
 from models import Terminal
 
-SERVICE_KEY_NAMES = ("SERVICE_KEY", "DATA_GO_SERVICE_KEY", "DATA_GO_KEY")
-
-
-def _read_service_key_from_env() -> str:
-    for name in SERVICE_KEY_NAMES:
-        value = os.environ.get(name, "").strip()
-        if value:
-            return value
-    return ""
-
-
-SERVICE_KEY = _read_service_key_from_env()
+SERVICE_KEY = os.environ.get("SERVICE_KEY", "")
 BASE_URL = "https://apis.data.go.kr/B551177/statusOfAllFltDeOdp"
-NUM_OF_ROWS = 1000
-REQUEST_TIMEOUT = (10, 60)
+NUM_OF_ROWS = 10000
 
 TERMINALS = [
     Terminal("T1", "P01"),
