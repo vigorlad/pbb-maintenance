@@ -6,6 +6,7 @@ import config
 from models import FlightItem, FlightType
 
 _session = requests.Session()
+_session.headers["User-Agent"] = "Mozilla/5.0 (compatible; PBB-Maintenance/1.0)"
 
 
 class FlightApiTimeoutError(RuntimeError):
