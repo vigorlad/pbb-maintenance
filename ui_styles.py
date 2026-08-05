@@ -134,6 +134,14 @@ CSS = """
         font-weight: 600;
     }
 
+    [data-testid="stAlert"] p {
+        word-break: keep-all;
+    }
+
+    [data-testid="stCaptionContainer"] p {
+        word-break: keep-all;
+    }
+
     /* ── 게이트 안내 캡션 ── */
     .gate-caption {
         text-align: center;

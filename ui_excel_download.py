@@ -1,6 +1,7 @@
 import streamlit as st
 
 from config import TERMINALS
+from flight_api import FlightApiTimeoutError
 from services import fetch_excel_data
 from utils import date_range
 from excel_export import create_excel_file, file_to_bytes_io
@@ -40,7 +41,16 @@ def render(tab, today, min_date, max_date):
                     label = "출발편" if phase == "departure" else "도착편"
                     st.write(f"📅 {date_string} {label} 조회 중...")
 
-                terminal_items = fetch_excel_data(dates, target_terminal_id, progress_callback=on_progress)
+                try:
+                    terminal_items = fetch_excel_data(
+                        dates,
+                        target_terminal_id,
+                        progress_callback=on_progress,
+                    )
+                except FlightApiTimeoutError as exc:
+                    status.update(label="조회 실패", state="error")
+                    st.warning(str(exc))
+                    return
                 status.update(label="조회 완료!", state="complete")
 
             if start_date_string == end_date_string:

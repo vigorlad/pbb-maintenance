@@ -7,6 +7,12 @@ from models import FlightItem, FlightType
 
 _session = requests.Session()
 
+
+class FlightApiTimeoutError(RuntimeError):
+    def __str__(self) -> str:
+        return "공공데이터포털 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
+
+
 _API_FIELD_MAP = {
     "flightId":          "flight_number",
     "scheduleDatetime":  "scheduled_datetime",
@@ -47,7 +53,10 @@ def _fetch_pages(operation: str, search_date: str, **extra_params) -> list[dict]
             **extra_params,
         }
 
-        response = _session.get(url, params=params, timeout=30)
+        try:
+            response = _session.get(url, params=params, timeout=30)
+        except requests.exceptions.Timeout as exc:
+            raise FlightApiTimeoutError() from exc
         response.raise_for_status()
         data = response.json()
 

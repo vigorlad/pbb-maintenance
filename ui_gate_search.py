@@ -6,6 +6,7 @@ from models import FlightType
 from services import GateFlight, fetch_gate_flights, filter_future_flights
 from utils import format_hhmm
 from config import KST
+from flight_api import FlightApiTimeoutError
 
 
 def _color(flight_type: FlightType) -> str:
@@ -114,11 +115,15 @@ def render(tab, today, now, min_date, max_date):
                 st.warning("게이트 번호는 숫자만 입력 가능합니다.")
             else:
                 with st.spinner("운항 데이터 조회 중..."):
-                    gate_flights, elapsed = fetch_gate_flights(
-                        search_date.strftime("%Y%m%d"),
-                        gate_value,
-                        search_time.strftime("%H%M"),
-                    )
+                    try:
+                        gate_flights, elapsed = fetch_gate_flights(
+                            search_date.strftime("%Y%m%d"),
+                            gate_value,
+                            search_time.strftime("%H%M"),
+                        )
+                    except FlightApiTimeoutError as exc:
+                        st.warning(str(exc))
+                        return
 
                 if not gate_flights:
                     st.error(f"게이트 **{gate_value}** 에 배정된 운항편이 없습니다.")

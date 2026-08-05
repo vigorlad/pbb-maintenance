@@ -5,7 +5,7 @@ from datetime import timedelta, timezone
 from models import Terminal
 
 SERVICE_KEY = os.environ.get("SERVICE_KEY", "")
-BASE_URL = "http://apis.data.go.kr/B551177/statusOfAllFltDeOdp"
+BASE_URL = "https://apis.data.go.kr/B551177/statusOfAllFltDeOdp"
 NUM_OF_ROWS = 10000
 
 TERMINALS = [
