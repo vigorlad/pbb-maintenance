@@ -7,3 +7,4 @@ services:
       - "127.0.0.1:8501:8501"
     environment:
       - SERVICE_KEY=${SERVICE_KEY}
+      - DEPLOY_ENV=home

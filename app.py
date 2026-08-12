@@ -1,4 +1,6 @@
 
+import os
+
 import streamlit as st
 from datetime import datetime, timedelta
 
@@ -19,6 +21,32 @@ st.set_page_config(
     page_icon="✈️",
     layout="wide",
 )
+
+
+# 앱은 홈서버에서 서비스한다. 홈서버 표시(DEPLOY_ENV=home)가 없는 곳
+# (예: 구 Streamlit Cloud 주소)에서는 새 주소로 이동시킨다.
+_HOME_URL = "https://wheon-cloud.tail8f80bb.ts.net/"
+
+
+def _is_home_server() -> bool:
+    if os.environ.get("DEPLOY_ENV") == "home":
+        return True
+    try:
+        return st.secrets.get("DEPLOY_ENV") == "home"
+    except Exception:
+        return False
+
+
+if not _is_home_server():
+    st.markdown(
+        f'<meta http-equiv="refresh" content="0; url={_HOME_URL}">',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"### 앱 주소가 이전되었습니다\n"
+        f"잠시 후 자동으로 이동합니다. 이동하지 않으면 [여기를 클릭]({_HOME_URL})하세요."
+    )
+    st.stop()
 
 
 st.markdown(ui_styles.CSS, unsafe_allow_html=True)
@@ -42,12 +70,3 @@ tab1, tab2 = st.tabs(["🛬 게이트 출도착 조회", "📊 엑셀 다운로�
 
 ui_gate_search.render(tab1, today, now, min_date, max_date)
 ui_excel_download.render(tab2, today, min_date, max_date)
-
-
-with st.expander("🔧 공공데이터포털 연결 진단"):
-    if st.button("진단 실행", key="diag_run"):
-        import diagnostics
-
-        with st.spinner("진단 중... (최대 1분 소요)"):
-            for name, ok, detail in diagnostics.run_diagnostics():
-                st.write(f"{'✅' if ok else '❌'} **{name}**: {detail}")
