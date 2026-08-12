@@ -38,14 +38,18 @@ def _is_home_server() -> bool:
 
 
 if not _is_home_server():
+    # Streamlit 안에서 스크립트 실행은 불가능하므로(컴포넌트 iframe은
+    # 샌드박스, markdown의 이벤트 핸들러는 React가 차단) 자동 이동은
+    # meta refresh로, 실패 대비는 수동 버튼으로 처리한다.
     st.markdown(
         f'<meta http-equiv="refresh" content="0; url={_HOME_URL}">',
         unsafe_allow_html=True,
     )
     st.markdown(
         f"### 앱 주소가 이전되었습니다\n"
-        f"잠시 후 자동으로 이동합니다. 이동하지 않으면 [여기를 클릭]({_HOME_URL})하세요."
+        f"잠시 후 자동으로 이동합니다. 이동하지 않으면 아래 버튼을 눌러주세요."
     )
+    st.link_button("새 주소로 이동 →", _HOME_URL)
     st.stop()
 
 
