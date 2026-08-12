@@ -42,3 +42,12 @@ tab1, tab2 = st.tabs(["🛬 게이트 출도착 조회", "📊 엑셀 다운로�
 
 ui_gate_search.render(tab1, today, now, min_date, max_date)
 ui_excel_download.render(tab2, today, min_date, max_date)
+
+
+with st.expander("🔧 공공데이터포털 연결 진단"):
+    if st.button("진단 실행", key="diag_run"):
+        import diagnostics
+
+        with st.spinner("진단 중... (최대 1분 소요)"):
+            for name, ok, detail in diagnostics.run_diagnostics():
+                st.write(f"{'✅' if ok else '❌'} **{name}**: {detail}")
