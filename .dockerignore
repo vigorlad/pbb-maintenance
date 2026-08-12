@@ -1,0 +1,11 @@
+.git
+.venv
+__pycache__
+.pytest_cache
+.idea
+.claude
+.devcontainer
+tests
+deploy
+*.xlsx
+.streamlit/secrets.toml

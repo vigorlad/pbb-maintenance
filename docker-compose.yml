@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    container_name: pbb-maintenance
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      - SERVICE_KEY=${SERVICE_KEY}
