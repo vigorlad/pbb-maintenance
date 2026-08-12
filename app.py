@@ -37,6 +37,15 @@ def _is_home_server() -> bool:
         return False
 
 
+try:
+    _secrets_val = st.secrets.get("DEPLOY_ENV")
+except Exception as exc:
+    _secrets_val = f"<error: {exc}>"
+st.caption(
+    f"debug: env={os.environ.get('DEPLOY_ENV')!r} · secrets={_secrets_val!r} "
+    f"· home={_is_home_server()}"
+)
+
 if not _is_home_server():
     # Streamlit 안에서 스크립트 실행은 불가능하므로(컴포넌트 iframe은
     # 샌드박스, markdown의 이벤트 핸들러는 React가 차단) 자동 이동은
