@@ -6,7 +6,7 @@ from models import FlightType
 from services import GateFlight, fetch_gate_flights, filter_future_flights
 from utils import format_hhmm
 from config import KST
-from flight_api import FlightApiTimeoutError
+from flight_api import FlightApiError
 
 
 def _color(flight_type: FlightType) -> str:
@@ -121,7 +121,7 @@ def render(tab, today, now, min_date, max_date):
                             gate_value,
                             search_time.strftime("%H%M"),
                         )
-                    except FlightApiTimeoutError as exc:
+                    except FlightApiError as exc:
                         st.warning(str(exc))
                         return
 

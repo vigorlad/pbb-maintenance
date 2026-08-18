@@ -1,7 +1,7 @@
 import streamlit as st
 
 from config import TERMINALS
-from flight_api import FlightApiTimeoutError
+from flight_api import FlightApiError
 from services import fetch_excel_data
 from utils import date_range
 from excel_export import create_excel_file, file_to_bytes_io
@@ -47,7 +47,7 @@ def render(tab, today, min_date, max_date):
                         target_terminal_id,
                         progress_callback=on_progress,
                     )
-                except FlightApiTimeoutError as exc:
+                except FlightApiError as exc:
                     status.update(label="조회 실패", state="error")
                     st.warning(str(exc))
                     return
