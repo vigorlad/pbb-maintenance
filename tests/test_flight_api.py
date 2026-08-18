@@ -41,3 +41,34 @@ def test_provider_error_is_not_reported_as_zero_results(monkeypatch: pytest.Monk
 
     assert caught.value.code == "30"
     assert "SERVICE_KEY_IS_NOT_REGISTERED_ERROR" in str(caught.value)
+
+
+def test_request_retries_once_when_first_attempt_times_out(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Given
+    successful_response = _FakeResponse(
+        {
+            "response": {
+                "header": {"resultCode": "00", "resultMsg": "NORMAL SERVICE."},
+                "body": {"totalCount": 0, "items": []},
+            }
+        }
+    )
+    call_count = 0
+
+    def get_with_first_attempt_timeout(*args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise requests.exceptions.ReadTimeout()
+        return successful_response
+
+    monkeypatch.setattr(_session, "get", get_with_first_attempt_timeout)
+
+    # When
+    result = _fetch_pages("getFltArrivalsDeOdp", "20260818")
+
+    # Then
+    assert result == []
+    assert call_count == 2

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TypeAlias
+from typing import Final, TypeAlias
 
 import requests
 
@@ -14,6 +14,9 @@ JsonValue: TypeAlias = (
     str | int | float | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
 )
 JsonObject: TypeAlias = dict[str, JsonValue]
+
+_REQUEST_TIMEOUT: Final = (5, 15)
+_REQUEST_ATTEMPTS: Final = 2
 
 
 class FlightApiError(RuntimeError):
@@ -105,14 +108,20 @@ def _fetch_pages(operation: str, search_date: str, **extra_params) -> list[dict]
             **extra_params,
         }
 
-        try:
-            response = _session.get(url, params=params, timeout=30)
-        except requests.exceptions.Timeout as exc:
-            raise FlightApiTimeoutError() from exc
-        except requests.exceptions.RequestException as exc:
-            raise FlightApiError(
-                "공공데이터포털에 연결할 수 없습니다. 잠시 후 다시 시도해주세요."
-            ) from exc
+        response = None
+        last_timeout = None
+        for _ in range(_REQUEST_ATTEMPTS):
+            try:
+                response = _session.get(url, params=params, timeout=_REQUEST_TIMEOUT)
+                break
+            except requests.exceptions.Timeout as exc:
+                last_timeout = exc
+            except requests.exceptions.RequestException as exc:
+                raise FlightApiError(
+                    "공공데이터포털에 연결할 수 없습니다. 잠시 후 다시 시도해주세요."
+                ) from exc
+        if response is None:
+            raise FlightApiTimeoutError() from last_timeout
 
         try:
             data = response.json()
