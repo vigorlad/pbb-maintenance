@@ -48,10 +48,9 @@ def write_excel_sheet(workbook: Workbook, sheet_name: str, all_items: list[Tagge
         cell.alignment = Alignment(horizontal="center", vertical="center")
         cell.border = THIN_BORDER
 
-    master_items = [tf for tf in all_items if tf.item.is_master]
-    master_items.sort(key=lambda tf: tf.item.scheduled_datetime)
+    sorted_items = sorted(all_items, key=lambda tf: tf.item.scheduled_datetime)
 
-    for row_index, tagged in enumerate(master_items, 2):
+    for row_index, tagged in enumerate(sorted_items, 2):
         for column_index, (_, field) in enumerate(config.EXCEL_COLUMNS, 1):
             value = _resolve_cell_value(tagged.item, field, tagged.flight_type)
             cell = worksheet.cell(row=row_index, column=column_index, value=value)
@@ -75,8 +74,8 @@ def create_excel_file(terminal_items: dict[str, list[TaggedFlight]]) -> Workbook
     workbook.remove(workbook.active)
 
     for terminal in config.TERMINALS:
-        items = terminal_items.get(terminal.terminal_id, [])
-        write_excel_sheet(workbook, terminal.name, items)
+        if terminal.terminal_id in terminal_items:
+            write_excel_sheet(workbook, terminal.name, terminal_items[terminal.terminal_id])
 
     return workbook
 

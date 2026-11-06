@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable
 
-from config import KST, TERMINALS
+from config import KST
 from models import FlightItem, FlightType
 from flight_api import fetch_flights
 
@@ -96,7 +96,7 @@ def fetch_excel_data(
     target_terminal_id: str,
     progress_callback: Callable[[str, str], None] | None = None,
 ) -> dict[str, list[TaggedFlight]]:
-    terminal_items: dict[str, list[TaggedFlight]] = {t.terminal_id: [] for t in TERMINALS}
+    terminal_items: dict[str, list[TaggedFlight]] = {target_terminal_id: []}
 
     for date_string in dates:
         if progress_callback:
@@ -109,7 +109,7 @@ def fetch_excel_data(
 
         for flight_type, flights in ((FlightType.DEPARTURE, departures), (FlightType.ARRIVAL, arrivals)):
             for item in flights:
-                if item.terminal_id == target_terminal_id:
+                if item.terminal_id == target_terminal_id and item.is_master:
                     terminal_items[item.terminal_id].append(
                         TaggedFlight(item=item, flight_type=flight_type)
                     )
