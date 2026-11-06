@@ -73,9 +73,12 @@ def _filter_by_gate(
             continue
         if item.gate_number.strip().upper() != gate:
             continue
-        parsed = _parse_scheduled(item.scheduled_datetime)
-        if parsed is None:
+        scheduled = _parse_scheduled(item.scheduled_datetime)
+        if scheduled is None:
             continue
+        # 예상 시각(ETA/ETD)이 있으면 그 기준으로 비교한다. 계획 시각만 보면
+        # 지연편이 아직 도착·출발 전인데도 "지난 편"으로 걸러진다.
+        parsed = _parse_scheduled(item.actual_datetime) or scheduled
         result.append(GateFlight(item=item, flight_type=flight_type, parsed_time=parsed))
     return result
 
